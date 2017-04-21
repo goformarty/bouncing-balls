@@ -3,6 +3,10 @@
 var para = document.querySelector('p');
 var count = 0;
 
+// user instructions
+var instructions = document.querySelector('h5');
+instructions.textContent = 'Use arrow keys to catch all the balls!';
+
 // setup canvas
 
 var canvas = document.querySelector('canvas');
@@ -145,13 +149,13 @@ EvilCircle.prototype.checkBounds = function() {
 EvilCircle.prototype.setControls = function() {
 	var _this = this;
 	window.onkeydown = function(e) {
-		if (e.keyCode === 65) {
+		if (e.keyCode === 37) {
 			_this.x -= _this.velX;
-		} else if (e.keyCode === 68) {
+		} else if (e.keyCode === 39) {
 			_this.x += _this.velX;
-		} else if (e.keyCode === 87) {
+		} else if (e.keyCode === 38) {
 			_this.y -= _this.velY;
-		} else if (e.keyCode === 83) {
+		} else if (e.keyCode === 40) {
 			_this.y += _this.velY;
 		}
 	};
@@ -170,7 +174,7 @@ EvilCircle.prototype.collisionDetect = function() {
 				// set any balls that collide with the evil circle to not exist anymore
 				balls[j].exist = false;
 				count--;
-        		para.textContent = 'Ball count: ' + count;
+        		para.textContent = 'Balls left: ' + count;
 			}
 		}
 	}
@@ -205,7 +209,7 @@ function loop()	{
 		// and push it onto the end of balls array until 25 balls
 		balls.push(ball);
 		count++;
-		para.textContent = 'Ball count: ' + count;
+		para.textContent = 'Balls left: ' + count;
 	}
 	// loop through all the balls in the array and run each ball's
 	// draw(), update() and collisionDetect() methids
