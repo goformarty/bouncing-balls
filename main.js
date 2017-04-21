@@ -162,14 +162,18 @@ EvilCircle.prototype.collisionDetect = function() {
 			var distance = Math.sqrt(dx * dx + dy * dy);
 
 			if (distance < this.size + balls[j].size) {
-				balls[j].color = this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) +')';
+				// set any balls that collide with the evil circle to not exist anymore
+				balls[j].exist = false;
 			}
 		}
 	}
 };
 
-
+// create an empty array to store all 25 ball instances
 var balls = [];
+// create EvilCircle object instance and allow user to move it
+var evilCircle = new EvilCircle();
+evilCircle.setControls();
 
 // function to animate the ball
 
@@ -193,12 +197,16 @@ function loop()	{
 	// loop through all the balls in the array and run each ball's
 	// draw(), update() and collisionDetect() methids
 	for(var i=0;i<balls.length;i++) {
-		balls[i].draw();
-		balls[i].update();
-		// in each frame call method to change color when balls collide
-		balls[i].collisionDetect();
+		if (balls[i].exist) {
+			balls[i].draw();
+			balls[i].update();
+			// in each frame call method to change color when balls collide
+			balls[i].collisionDetect();
+		}
+		evilCircle.draw();
+		evilCircle.checkBounds();
+		evilCircle.collisionDetect();
 	}
-
 	requestAnimationFrame(loop);
 }
 
