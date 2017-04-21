@@ -13,10 +13,9 @@ function random(min,max) {
 	return num;
 }
 
-// Ball() constructor function to generate ball objects
-// with all properties
+// Shape() constructor function to generate ball object
 
-function Ball() {
+function Shape() {
 	// x and y coordinates for initial ball position
 	this.x = random(0, width);
 	this.y = random(0, height);
@@ -24,13 +23,26 @@ function Ball() {
 	// move them by this much on each frame
 	this.velX = random(-7, 7);
 	this.velY = random(-7, 7);
+	
+	// check whether the balls exist in the programme
+	// have not been eaten by the evil circle
+	this.exist = true;
+}
+
+// Ball() contructor inheriting from Shape() constructor
+
+function Ball(x, y, velX, velY, exist) {
+	Shape.call(this, x, y, velX, velY, exist);
 	// random color to start with
 	this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) +')';
 	// random size, a radius between 10 and 20px
 	this.size = random(10, 20);
 }
 
-// all Ball() methods:
+Ball.prototype = Object.create(Shape.prototype);
+Ball.prototype.constructor = Ball;
+
+// define Ball() methods:
 
 // method to draw the ball
 
@@ -45,24 +57,24 @@ Ball.prototype.draw = function() {
 //  method to upade ball's position - to start moving the ball
 
 Ball.prototype.update = function() {
-  if ((this.x + this.size) >= width) {
-    this.velX = -(this.velX);
-  }
+	if ((this.x + this.size) >= width) {
+		this.velX = -(this.velX);
+	}
 
-  if ((this.x - this.size) <= 0) {
-    this.velX = -(this.velX);
-  }
+	if ((this.x - this.size) <= 0) {
+		this.velX = -(this.velX);
+	}
 
-  if ((this.y + this.size) >= height) {
-    this.velY = -(this.velY);
-  }
+	if ((this.y + this.size) >= height) {
+		this.velY = -(this.velY);
+	}
 
-  if ((this.y - this.size) <= 0) {
-    this.velY = -(this.velY);
-  }
+	if ((this.y - this.size) <= 0) {
+		this.velY = -(this.velY);
+	}
 
-  this.x += this.velX;
-  this.y += this.velY;
+	this.x += this.velX;
+	this.y += this.velY;
 };
 
 // method to add collision detection 
@@ -79,6 +91,83 @@ Ball.prototype.collisionDetect = function() {
 		}
 	}
 };
+
+
+// define EvilCircle() from Shape() constructor
+function EvilCircle(x, y, exist) {
+	Shape.call(this, x, y, exist);
+	this.color = 'white';
+	this.size = 10;
+	this.velX = 20;
+	this.velY = 20;
+}
+
+EvilCircle.prototype = Object.create(Shape.prototype);
+EvilCircle.prototype.constructor = EvilCircle;
+
+// define EvilCircle() methods:
+
+// EvilCircle() method to draw instance on canvas
+EvilCircle.prototype.draw = function() {
+	ctx.beginPath();
+	ctx.strokeStyle = this.color;
+	// arc() method to trace an arc shape on the paper
+	ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+	ctx.stroke();
+	ctx.lineWidth = 3;
+};
+
+// EvilCircle() method to prevent circle from going off the screen
+EvilCircle.prototype.checkBounds = function() {
+	if ((this.x + this.size) >= width) {
+		this.x -= this.size ;
+	}
+
+	if ((this.x - this.size) <= 0) {
+		this.x += this.size;
+	}
+
+	if ((this.y + this.size) >= height) {
+		this.y -= this.size;
+	}
+
+	if ((this.y - this.size) <= 0) {
+		this.y += this.size;
+	}
+};
+
+// EvilCircle() method to add an( onkeydown event listener to move circle around
+EvilCircle.prototype.setControls = function() {
+	var _this = this;
+	window.onkeydown = function(e) {
+		if (e.keyCode === 65) {
+			_this.x -= _this.velX;
+		} else if (e.keyCode === 68) {
+			_this.x += _this.velX;
+		} else if (e.keyCode === 87) {
+			_this.y -= _this.velY;
+		} else if (e.keyCode === 83) {
+			_this.y += _this.velY;
+		}
+	};
+};
+
+// EvilCircle() method to
+EvilCircle.prototype.collisionDetect = function() {
+	for(var j=0; j< balls.length; j++) {
+		// check if the being checked ball has not been eaten already by the evil circle
+		if(balls[j].exist) {
+			var dx = this.x - balls[j].x;
+			var dy = this.y - balls[j].y;
+			var distance = Math.sqrt(dx * dx + dy * dy);
+
+			if (distance < this.size + balls[j].size) {
+				balls[j].color = this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) +')';
+			}
+		}
+	}
+};
+
 
 var balls = [];
 
