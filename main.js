@@ -1,3 +1,8 @@
+// define variable for ball count paragraph
+
+var para = document.querySelector('p');
+var count = 0;
+
 // setup canvas
 
 var canvas = document.querySelector('canvas');
@@ -13,7 +18,7 @@ function random(min,max) {
 	return num;
 }
 
-// Shape() constructor function to generate ball object
+// define Shape() constructor to generate balls
 
 function Shape() {
 	// x and y coordinates for initial ball position
@@ -29,7 +34,7 @@ function Shape() {
 	this.exist = true;
 }
 
-// Ball() contructor inheriting from Shape() constructor
+// define Ball() contructor inheriting from Shape() constructor
 
 function Ball(x, y, velX, velY, exist) {
 	Shape.call(this, x, y, velX, velY, exist);
@@ -93,7 +98,7 @@ Ball.prototype.collisionDetect = function() {
 };
 
 
-// define EvilCircle() from Shape() constructor
+// define EvilCircle() contructor inheriting from Shape() constructor
 function EvilCircle(x, y, exist) {
 	Shape.call(this, x, y, exist);
 	this.color = 'white';
@@ -164,18 +169,24 @@ EvilCircle.prototype.collisionDetect = function() {
 			if (distance < this.size + balls[j].size) {
 				// set any balls that collide with the evil circle to not exist anymore
 				balls[j].exist = false;
+				count--;
+        		para.textContent = 'Ball count: ' + count;
 			}
 		}
 	}
 };
 
-// create an empty array to store all 25 ball instances
+// define an empty array to store all 25 ball instances
 var balls = [];
-// create EvilCircle object instance and allow user to move it
+
+// define loop that keeps drawing the scene constantly:
+
+// define EvilCircle object instance and allow user to move it
 var evilCircle = new EvilCircle();
 evilCircle.setControls();
 
-// function to animate the ball
+
+// define loop function to animate the ball
 
 function loop()	{
 	// set the canvas fill color to sem-transparent black
@@ -193,6 +204,8 @@ function loop()	{
 		var ball = new Ball();
 		// and push it onto the end of balls array until 25 balls
 		balls.push(ball);
+		count++;
+		para.textContent = 'Ball count: ' + count;
 	}
 	// loop through all the balls in the array and run each ball's
 	// draw(), update() and collisionDetect() methids
