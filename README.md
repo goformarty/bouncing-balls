@@ -38,7 +38,7 @@ Interactive single player game. Eat all the balls!
 ## What I've learned and practised: 
 - DOM manipulation;
 - basic mathods for canvas API;
-- animating with equestAnimationFrame API;
+- animating with requestAnimationFrame API;
 - creating objects and inheriting with prototype chain;
 
 ## What can be added:
