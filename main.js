@@ -1,29 +1,26 @@
-// define variable for ball count paragraph
+// define variable for the ball count paragraph
 
 var para = document.querySelector('p');
 var count = 0;
 
-// user instructions
+// add user instructions 
 var instructions = document.querySelector('h5');
 instructions.textContent = 'Use arrow keys to catch all the balls!';
 
-// setup canvas
-
+// setup canvas to equal the width and height of the browser viewport
 var canvas = document.querySelector('canvas');
 var ctx = canvas.getContext('2d');
 
 var width = canvas.width = window.innerWidth;
 var height = canvas.height = window.innerHeight;
 
-// function to generate random number
-
+// function to generate random number - will be used for colour and velocity
 function random(min,max) {
 	var num = Math.floor(Math.random()*(max-min)) + min;
 	return num;
 }
 
-// define Shape() constructor to generate balls
-
+// define Shape() constructor to generate balls;
 function Shape() {
 	// x and y coordinates for initial ball position
 	this.x = random(0, width);
@@ -39,7 +36,6 @@ function Shape() {
 }
 
 // define Ball() contructor inheriting from Shape() constructor
-
 function Ball(x, y, velX, velY, exist) {
 	Shape.call(this, x, y, velX, velY, exist);
 	// random color to start with
@@ -52,9 +48,7 @@ Ball.prototype = Object.create(Shape.prototype);
 Ball.prototype.constructor = Ball;
 
 // define Ball() methods:
-
 // method to draw the ball
-
 Ball.prototype.draw = function() {
 	ctx.beginPath();
 	ctx.fillStyle = this.color;
@@ -63,8 +57,7 @@ Ball.prototype.draw = function() {
 	ctx.fill();
 };
 
-//  method to upade ball's position - to start moving the ball
-
+//  method to update ball's position - to start moving the ball
 Ball.prototype.update = function() {
 	if ((this.x + this.size) >= width) {
 		this.velX = -(this.velX);
@@ -93,7 +86,7 @@ Ball.prototype.collisionDetect = function() {
 			var dx = this.x - balls[j].x;
 			var dy = this.y - balls[j].y;
 			var distance = Math.sqrt(dx * dx + dy * dy);
-
+			// after collision update ball to defferent colour
 			if (distance < this.size + balls[j].size) {
 				balls[j].color = this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) +')';
 			}
@@ -123,7 +116,7 @@ EvilCircle.prototype.draw = function() {
 	// arc() method to trace an arc shape on the paper
 	ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
 	ctx.stroke();
-	ctx.lineWidth = 3;
+	ctx.lineWidth = 4;
 };
 
 // EvilCircle() method to prevent circle from going off the screen
@@ -150,18 +143,22 @@ EvilCircle.prototype.setControls = function() {
 	var _this = this;
 	window.onkeydown = function(e) {
 		if (e.keyCode === 37) {
-			_this.x -= _this.velX;
+			// left arrow key
+			_this.x -= _this.velX; 
 		} else if (e.keyCode === 39) {
+			// right arrow key
 			_this.x += _this.velX;
 		} else if (e.keyCode === 38) {
+			// up arrow key
 			_this.y -= _this.velY;
 		} else if (e.keyCode === 40) {
+			// down arrow key
 			_this.y += _this.velY;
 		}
 	};
 };
 
-// EvilCircle() method to
+// EvilCircle() method to eat the ball
 EvilCircle.prototype.collisionDetect = function() {
 	for(var j=0; j< balls.length; j++) {
 		// check if the being checked ball has not been eaten already by the evil circle
@@ -183,8 +180,7 @@ EvilCircle.prototype.collisionDetect = function() {
 // define an empty array to store all 25 ball instances
 var balls = [];
 
-// define loop that keeps drawing the scene constantly:
-
+// Define loop that keeps drawing the scene constantly:
 // define EvilCircle object instance and allow user to move it
 var evilCircle = new EvilCircle();
 evilCircle.setControls();
@@ -193,7 +189,7 @@ evilCircle.setControls();
 // define loop function to animate the ball
 
 function loop()	{
-	// set the canvas fill color to sem-transparent black
+	// set the canvas fill color to semi-transparent black
 	// this covers up the previous frame's drawing before the next one is drawn
 	// without this, there will be long snakes instead of moving balls
 	// semi-transparent fill will allow a few previous frames to shine through,
