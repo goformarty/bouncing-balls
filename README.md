@@ -8,11 +8,11 @@ Interactive single player game. Eat all the balls!
 
 - Let the game take the whole browser viewport.
 - Create 25 animated balls in random colours moving around with different velocity. Make them change colours each time they collide. 
-- Create user-controled "evil-circle" that eats the ball.
+- Create user-controled "evil-circle" that eats animated balls.
 - Add user instructions and counter that shows the player how many balls are left to "eat".
 
 ## Approach:
-1. Create canvas element to draw our animated balls on:
+1. Create canvas element to draw animated balls on:
 - get rid of scrollbars and margins round the edge of the page;
 - set drawing area of the canvas to equal the width and height of the browser viewport;
 
